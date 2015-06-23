@@ -1,8 +1,10 @@
 ;; Interface to "picloops" external program
 
+(require 'cl-lib)
+
 (defun picloops-loop-1 (label counter-a)
   "Initializes and outputs a single-stage loop"
-  (macrolet ((i-f (str &rest args)
+  (cl-macrolet ((i-f (str &rest args)
       `(insert (format ,str ,@args))))
     (i-f "\ndelay_%s:\n" label)
     (i-f "\tMOVLW\tD'%d'\n" counter-a)
@@ -14,7 +16,7 @@
 
 (defun picloops-loop-2 (label counter-a counter-b)
   "Initializes and outputs a two-stage loop"
-  (macrolet ((i-f (str &rest args)
+  (cl-macrolet ((i-f (str &rest args)
       `(insert (format ,str ,@args))))
     (i-f "\ndelay_%s:\n" label)
     (i-f "\tMOVLW\tD'%d'\n" counter-b)
@@ -30,7 +32,7 @@
 
 (defun picloops-loop-3 (label counter-a counter-b counter-c)
   "Initializes and outputs a three-stage loop"
-  (macrolet ((i-f (str &rest args)
+  (cl-macrolet ((i-f (str &rest args)
       `(insert (format ,str ,@args))))
     (i-f "\ndelay_%s:\n" label)
     (i-f "\tMOVLW\tD'%d'\n" counter-c)
