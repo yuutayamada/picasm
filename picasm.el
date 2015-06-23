@@ -15,7 +15,6 @@
 (require 'xml)
 (require 'cl-lib)
 (require 'picasm-external)
-(require 'picasm-loops)
 
 (defcustom pic-database-file "~/.emacs.d/picasm/chips.xml"
   "Location of the PIC chip database (XML-format)"
