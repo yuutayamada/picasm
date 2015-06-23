@@ -13,6 +13,7 @@
 ;; Programmer support for the pk2cmd program
 ;; Delay loop calculation and code generation
 
+(require 'cl-lib)
 (require 'picasm-external)
 (require 'picasm-loops)
 
@@ -233,13 +234,13 @@
           (xml-get-attribute chip-descr 'Name)
           (string-to-number (xml-get-attribute chip-descr 'PinCount))))
       (let* ((periphs (car (xml-get-children chip-descr 'Peripherals)))
-	     (adc (or (caddar (xml-get-children periphs 'ADCChannels)) "0"))
-	     (uart (or (caddar (xml-get-children periphs 'UARTs)) "0"))
-	     (usart (or (caddar (xml-get-children periphs 'USARTs)) "0"))
-	     (spi (or (caddar (xml-get-children periphs 'SPI)) "0"))
-	     (i2c (or (caddar (xml-get-children periphs 'I2C)) "0"))
-	     (ssp (or (caddar (xml-get-children periphs 'SSP)) "0"))
-	     (mssp (or (caddar (xml-get-children periphs 'MSSP)) "0")))
+       (adc (or (cl-caddar (xml-get-children periphs 'ADCChannels)) "0"))
+       (uart (or (cl-caddar (xml-get-children periphs 'UARTs)) "0"))
+       (usart (or (cl-caddar (xml-get-children periphs 'USARTs)) "0"))
+       (spi (or (cl-caddar (xml-get-children periphs 'SPI)) "0"))
+       (i2c (or (cl-caddar (xml-get-children periphs 'I2C)) "0"))
+       (ssp (or (cl-caddar (xml-get-children periphs 'SSP)) "0"))
+       (mssp (or (cl-caddar (xml-get-children periphs 'MSSP)) "0")))
 	(insert (format "ADC Channels: %s\nUARTs: %s\nUSARTs: %s\nSPI: %s\nI2C: %s\nSSP: %s\n MSSP: %s\n" adc uart usart spi i2c ssp mssp))
 	(dolist (timer (xml-get-children periphs 'Timer))
     (insert (format "Timer: %d at %d bits\n" (string-to-number (xml-get-attribute timer 'Count)) (string-to-number (xml-get-attribute timer 'Bits))))))
