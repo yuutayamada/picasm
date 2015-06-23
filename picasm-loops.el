@@ -59,9 +59,9 @@
   (let ((counters (picasm-run-picloops seconds clock-mhz)))
     (cond ((= (cadr counters) -1)
      (picloops-loop-1 label (car counters)))
-    ((= (caddr counters) -1)
+    ((= (cl-caddr counters) -1)
      (picloops-loop-2 label (car counters) (cadr counters)))
     (t
-     (picloops-loop-3 label (car counters) (cadr counters) (caddr counters))))))
+     (picloops-loop-3 label (car counters) (cadr counters) (cl-caddr counters))))))
 
 (provide 'picasm-loops)
