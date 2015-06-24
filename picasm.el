@@ -196,6 +196,7 @@
     (dolist (entry (xml-get-children rawdb 'Chip))
       (setf (gethash (xml-get-attribute entry 'Name) pic-database) entry))))
 
+;;;###autoload
 (defun picasm-mode ()
   (interactive)
   (kill-all-local-variables)
@@ -251,6 +252,9 @@
 (defcustom picasm-show-assembler-output nil
   "Whether to display assembler output in a new window"
   :type 'boolean :group 'picasm)
+
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.asm$" . picasm-mode))
 
 (provide 'picasm)
 
