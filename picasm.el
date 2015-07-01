@@ -18,7 +18,7 @@
 (require 'rx)
 
 (defcustom pic-database-file "~/.emacs.d/picasm/chips.xml"
-  "Location of the PIC chip database (XML-format)"
+  "Location of the PIC chip database (XML-format)."
   :type 'string :group 'picasm)
 
 (defvar pic-database (make-hash-table :test 'equal))
@@ -85,23 +85,23 @@
         `(,picasm-mode-identifier-re . font-lock-variable-name-face)))
 
 (defcustom picasm-instruction-indent-spaces 6
-  "Number of spaces to indent instruction lines"
+  "Number of spaces to indent instruction lines."
   :type 'integer :group 'picasm)
 
 (defcustom picasm-section-marker-indent-spaces 8
-  "Number of spaces to indent section markers"
+  "Number of spaces to indent section markers."
   :type 'integer :group 'picasm)
 
 (defcustom picasm-instruction-argument-indent-tabs 2
-  "Number of tabs to insert after instructions, before arguments"
+  "Number of tabs to insert after instructions, before arguments."
   :type 'integer :group 'picasm)
 
 (defcustom picasm-instruction-comment-indent-tabs 2
-  "Number of tabs to indent comments"
+  "Number of tabs to indent comments."
   :type 'integer :group 'picasm)
 
 (defcustom picasm-require-comment t
-  "Whether to require a comment on every line (even if empty)"
+  "Whether to require a comment on every line (even if empty)."
   :type 'boolean :group 'picasm)
 
 (defun strip-trailing-whitespace ()
@@ -111,7 +111,7 @@
       (replace-match ""))))
 
 (defun picasm-mode-indent-instruction-line ()
-  "Indent an instruction"
+  "Indent an instruction."
   (interactive)
   (beginning-of-line)
   (if (bobp)
@@ -168,7 +168,9 @@
     (t (message "don't know how to indent this line")))))
 
 (defun picasm-electric-comment ()
-  "Insert a comment at EOL, move point to it. If there is already a comment there, move point to it. Otherwise, insert a semicolon."
+  "Insert a comment at EOL, move point to it.
+If there is already a comment there, move point to it.  Otherwise, insert
+a semicolon."
   (interactive)
   (let ((p (point)))
     (beginning-of-line)
@@ -196,10 +198,11 @@
 (defvar picasm-mode-map (make-keymap))
 
 (defcustom picasm-use-default-keybindings t
-  "Whether to assume you want to use my keybindings (recommended!)"
+  "Whether to assume you want to use my keybindings (recommended!)."
   :type 'boolean :group 'picasm)
 
 (defun picasm-setup-default-keybindings ()
+  "Default keybinds."
   (define-key picasm-mode-map "\t" 'picasm-mode-indent-instruction-line)
   (define-key picasm-mode-map ";" 'picasm-electric-comment)
   (define-key picasm-mode-map "\C-c\C-c" 'assemble-file)
@@ -214,7 +217,7 @@
                (picasm-mode-indent-instruction-line))))
 
 (defcustom picasm-mode-hook nil
-  "Hook run when picasm-mode is initialized"
+  "Hook run when picasm-mode is initialized."
   :type 'hook :group 'picasm)
 
 (defun read-pic-database ()
