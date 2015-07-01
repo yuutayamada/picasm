@@ -294,4 +294,9 @@ a semicolon."
 
 (provide 'picasm)
 
+;; Local Variables:
+;; coding: utf-8
+;; mode: emacs-lisp
+;; End:
 
+;;; picasm.el ends here
