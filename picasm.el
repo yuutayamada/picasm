@@ -12,6 +12,9 @@
 ;; Assembler/Linker support for GNU gputils and Microchip's MPASM
 ;; Programmer support for the pk2cmd program
 ;; Delay loop calculation and code generation
+
+;;; Code:
+
 (require 'xml)
 (require 'cl-lib)
 (require 'picasm-external)
