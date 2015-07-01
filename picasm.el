@@ -37,7 +37,7 @@
        "DECF" "DECFSZ" "GOTO" "INCF" "INCFSZ" "IORWF" "IORLW"
        "MOVF" "MOVFW" "MOVLW" "MOVWF" "NOP"
        "RETURN" "RETLW" "RETFIE" "RLF" "RRF"
-       "SLEEP" "SUBLW" "SUBWF" "SWAPF"
+       "SLEEP" "SUBLW" "SUBWF" "SWAPF" "TRIS"
        "XORLW" "XORWF")
       symbol-end))
 
@@ -62,7 +62,7 @@
 
 (defconst picasm-mode-pp-directive-re
   (rx
-   (or "list" "equ" "constant" "res" "MACRO" "ENDM" "__CONFIG"
+   (or "list" "equ" "constant" "res" "MACRO" "ENDM" "__CONFIG" "ORG" "RADIX"
        (and "#" (or "include" "define" "if" "else" "endif" "ifdef" "ifndef")))))
 
 (defconst picasm-mode-section-marker-re
