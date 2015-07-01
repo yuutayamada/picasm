@@ -66,7 +66,13 @@
        (and "#" (or "include" "define" "if" "else" "endif" "ifdef" "ifndef")))))
 
 (defconst picasm-mode-section-marker-re
-  (rx (or (and "UDATA" (? "_SHR")) "CODE" "END")))
+  (rx (or (and "UDATA" (? "_SHR")) "CODE")))
+
+(defconst picasm-mode-block-re
+  (rx (or "CBLOCK" (and "END" (? "C")))))
+
+(defconst picasm-mode-label-re
+  (rx (1+ (in "a-zA-Z_")) ":"))
 
 (defconst picasm-mode-identifier-re
   "[[:alnum:]_,<>]+")
