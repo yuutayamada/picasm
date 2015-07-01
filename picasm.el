@@ -78,11 +78,11 @@
 
 (defconst picasm-mode-font-lock-keywords
   (list `(,picasm-mode-font-lock-instruction-re . font-lock-keyword-face)
-    `(,picasm-mode-font-lock-syntheticop-keyword-re . font-lock-builtin-face)
-    `(,picasm-mode-number-literal-re . font-lock-constant-face)
-    `(,picasm-mode-pp-directive-re . font-lock-preprocessor-face)
-    `(,picasm-mode-section-marker-re . font-lock-keyword-face)
-    `(,picasm-mode-identifier-re . font-lock-variable-name-face)))
+        `(,picasm-mode-font-lock-syntheticop-keyword-re . font-lock-builtin-face)
+        `(,picasm-mode-number-literal-re . font-lock-constant-face)
+        `(,picasm-mode-pp-directive-re . font-lock-preprocessor-face)
+        `(,picasm-mode-section-marker-re . font-lock-keyword-face)
+        `(,picasm-mode-identifier-re . font-lock-variable-name-face)))
 
 (defcustom picasm-instruction-indent-spaces 6
   "Number of spaces to indent instruction lines"
