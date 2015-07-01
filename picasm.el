@@ -195,7 +195,7 @@ a semicolon."
          (goto-char p)
          (insert ";"))))))
 
-(defvar picasm-chip-select "PIC16F84A")
+(defvar picasm-chip-select "")
 
 (defvar picasm-mode-syntax-table
   (let ((tab (make-syntax-table)))
