@@ -236,24 +236,21 @@ a semicolon."
       (setf (gethash (xml-get-attribute entry 'Name) pic-database) entry))))
 
 ;;;###autoload
-(defun picasm-mode ()
-  (interactive)
-  (kill-all-local-variables)
+(define-derived-mode picasm-mode prog-mode "asm"
+  "A major mode for an assembly language of PIC."
+  :group 'picasm
+  (setq-local indent-tabs-mode nil)
   (set-syntax-table picasm-mode-syntax-table)
-  (use-local-map picasm-mode-map)
   (set (make-local-variable 'font-lock-defaults) '(picasm-mode-font-lock-keywords nil t))
   (set (make-local-variable 'indent-line-function) 'picasm-mode-indent-instruction-line)
-  (setq major-mode 'picasm-mode)
-  (setq mode-name (format "PICasm [%s]" picasm-chip-select))
+  (setq mode-name (format "PICasm [%s]" (or picasm-chip-select "???")))
   (set (make-local-variable 'font-lock-keywords)
        '(picasm-mode-font-lock-keywords))
   (set (make-local-variable 'comment-start) ";")
-  (if picasm-use-default-keybindings
-      (picasm-setup-default-keybindings))
-  (if (= (hash-table-size pic-database) 0)
-      (read-pic-database))
-  (call-interactively 'picasm-select-chip)
-  (run-hooks 'picasm-mode-hook))
+  (when picasm-use-default-keybindings
+    (picasm-setup-default-keybindings))
+  (when (= (hash-table-size pic-database) 0)
+    (read-pic-database)))
 
 (defun picasm-select-chip (newchip)
   (interactive "MSelect chip: ")
