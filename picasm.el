@@ -15,6 +15,7 @@
 (require 'xml)
 (require 'cl-lib)
 (require 'picasm-external)
+(require 'rx)
 
 (defcustom pic-database-file "~/.emacs.d/picasm/chips.xml"
   "Location of the PIC chip database (XML-format)"
@@ -28,25 +29,52 @@
 
 
 (defconst picasm-mode-font-lock-instruction-re
-  "\\<\\(?:A\\(?:DD\\(?:LW\\|WF\\)\\|ND\\(?:LW\\|WF\\)\\)\\|B\\(?:CF\\|SF\\|TFS[CS]\\)\\|C\\(?:ALL\\|LR\\(?:WDT\\|[FW]\\)\\|OMF\\)\\|DECF\\(?:SZ\\)?\\|GOTO\\|I\\(?:NCF\\(?:SZ\\)?\\|OR\\(?:LW\\|WF\\)\\)\\|MOV\\(?:F\\|LW\\|WF\\)\\|NOP\\|R\\(?:ET\\(?:FIE\\|LW\\|URN\\)\\|[LR]F\\)\\|S\\(?:LEEP\\|UB\\(?:LW\\|WF\\)\\|WAPF\\)\\|XOR\\(?:LW\\|WF\\)\\|\\(?:BANK\\|PAGE\\)SEL\\)\\>")
+  (rx symbol-start
+      (or
+       "ADDLW" "ADDWF" "ANDLW" "ANDWF" "ANDWF"
+       "BCF" "BSF" "BTFSC" "BTFSS"
+       "CALL" "CLRW" "CLRF" "COMF" "CLRWDT"
+       "DECF" "DECFSZ" "GOTO" "INCF" "INCFSZ" "IORWF" "IORLW"
+       "MOVF" "MOVFW" "MOVLW" "MOVWF" "NOP"
+       "RETURN" "RETLW" "RETFIE" "RLF" "RRF"
+       "SLEEP" "SUBLW" "SUBWF" "SWAPF"
+       "XORLW" "XORWF")
+      symbol-end))
 
-
-; This RE picks up the canonical GPASM number syntaxes as well as legacy MPASM syntaxes for binary,
-; octal, decimal and hexadecimal number literals.
+;; This RE picks up the canonical GPASM number syntaxes as well as
+;; legacy MPASM syntaxes for binary, octal, decimal and hexadecimal
+;; number literals.
 (defconst picasm-mode-number-literal-re
-  "\\(?:[bB]'[01]+'\\|[oO]'[0-7]+'\\|[dD]'[0-9]+'\\|[Hh]'[0-9A-Fa-f]+'\\|0[xX][0-9A-Fa-f]+\\|[01]+[Bb]\\|[Qq]'[0-7]+'\\|[0-7]+[oO]\\|[0-7]+[Qq]\\|[0-9]+[Dd]\\|\\.[0-9]+\\|[0-9A-Fa-f]+[Hh]\\)")
+  (rx
+   (or
+    (and (or "b" "B") "'" (1+ (in "0-1")) "'")
+    (and (or "o" "O") "'" (1+ (in "0-7")) "'")
+    (and (or "q" "Q") "'" (1+ (in "0-7")) "'")
+    (and (or "d" "D") "'" (1+ (in "0-9")) "'")
+    (and (or "h" "H") "'" (1+ (in "0-9A-Fa-f")) "'")
+    (and (1+ (in "0-1"))       (or "b" "B"))
+    (and (1+ (in "0-7"))       (or "o" "O"))
+    (and (1+ (in "0-7"))       (or "q" "Q"))
+    (and (1+ (in "0-9"))       (or "d" "D"))
+    (and (1+ (in "0-9A-Fa-f")) (or "h" "H"))
+    (and "." (1+ (in "0-9")))
+    (and "0" (or "x" "X") (1+ (in "0-9A-Fa-f"))))))
 
 (defconst picasm-mode-pp-directive-re
-  "\\(list\\|equ\\|constant\\|res\\|MACRO\\|ENDM\\|#\\(?:include\\|define\\|if\\|else\\|endif\\|ifn?def\\)\\|__CONFIG\\)")
+  (rx
+   (or "list" "equ" "constant" "res" "MACRO" "ENDM" "__CONFIG"
+       (and "#" (or "include" "define" "if" "else" "endif" "ifdef" "ifndef")))))
 
 (defconst picasm-mode-section-marker-re
-  "\\(?:UDATA\\(?:_SHR\\)?\\|CODE\\|END\\)")
+  (rx (or (and "UDATA" (? "_SHR")) "CODE" "END")))
 
 (defconst picasm-mode-identifier-re
   "[[:alnum:]_,<>]+")
 
 (defconst picasm-mode-font-lock-syntheticop-keyword-re
-  "\\<\\(?:\\(?:BANK\\|PAGE\\)SEL\\)\\>")
+  (rx symbol-start
+      (and (or "BANK" "PAGE") "SEL")
+      symbol-end))
 
 (defconst picasm-mode-font-lock-keywords
   (list `(,picasm-mode-font-lock-instruction-re . font-lock-keyword-face)
