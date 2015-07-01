@@ -75,7 +75,7 @@
   (rx (1+ (in "a-zA-Z_")) ":"))
 
 (defconst picasm-mode-identifier-re
-  "[[:alnum:]_,<>]+")
+  "[[:alnum:]_,<>]+[^:]")
 
 (defconst picasm-mode-font-lock-syntheticop-keyword-re
   (rx symbol-start
