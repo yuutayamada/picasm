@@ -34,13 +34,31 @@
 (defconst picasm-mode-font-lock-instruction-re
   (rx symbol-start
       (or
+       ;; A
        "ADDLW" "ADDWF" "ANDLW" "ANDWF" "ANDWF"
+       ;; B
        "BCF" "BSF" "BTFSC" "BTFSS"
-       "CALL" "CLRW" "CLRF" "COMF" "CLRWDT"
-       "DECF" "DECFSZ" "GOTO" "INCF" "INCFSZ" "IORWF" "IORLW"
-       "MOVF" "MOVFW" "MOVLW" "MOVWF" "NOP"
+       ;; C
+       "CALL" "CLRF" "COMF" "CLRW" "CLRWDT"
+       ;; D
+       "DECF" "DECFSZ"
+       ;; G
+       "GOTO"
+       ;; I
+       "INCF" "INCFSZ" "IORWF" "IORLW"
+       ;; M
+       "MOVF" "MOVFW" "MOVLW" "MOVWF"
+       ;; O
+       "OPTION"
+       ;; N
+       "NOP"
+       ;; R
        "RETURN" "RETLW" "RETFIE" "RLF" "RRF"
-       "SLEEP" "SUBLW" "SUBWF" "SWAPF" "TRIS"
+       ;; S
+       "SLEEP" "SUBLW" "SUBWF" "SWAPF"
+       ;; T
+       "TRIS"
+       ;; X
        "XORLW" "XORWF")
       symbol-end))
 
