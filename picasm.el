@@ -56,9 +56,6 @@
        "XORLW" "XORWF")
       symbol-end))
 
-;; This RE picks up the canonical GPASM number syntaxes as well as
-;; legacy MPASM syntaxes for binary, octal, decimal and hexadecimal
-;; number literals.
 (defconst picasm-mode-number-literal-re
   (rx
    (or
@@ -73,7 +70,11 @@
     (and (1+ num) (or "d" "D"))
     (and (1+ hex) (or "h" "H"))
     (and "." (1+ num))
-    (and "0" (or "x" "X") (1+ hex))))))
+    (and "0" (or "x" "X") (1+ hex))))
+  "Regex for number literal.
+This RE picks up the canonical GPASM number syntaxes as well as
+legacy MPASM syntaxes for binary, octal, decimal and hexadecimal
+number literals.")
 
 (defconst picasm-mode-pp-directive-re
   (rx
