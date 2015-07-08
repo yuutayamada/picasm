@@ -84,14 +84,16 @@ number literals.")
 
 (defconst picasm-pp-directive-re
   (rx
-   (or "list" "equ" "constant" "res" "MACRO" "ENDM" "__CONFIG" "ORG" "RADIX"
+   (or "list" "equ" "constant" "res" "MACRO" "ENDM" "ORG" "RADIX"
        (and "#" (or "include" "define" "if" "else" "endif" "ifdef" "ifndef")))))
 
 (defconst picasm-section-marker-re
-  (rx (or (and "UDATA" (? "_SHR")) "CODE")))
+  (rx line-start (* blank)
+      (or (and "UDATA" (? "_SHR")) "CODE" "__CONFIG" "END")
+      line-end))
 
 (defconst picasm-block-re
-  (rx (or "CBLOCK" (and "END" (? "C")))))
+  (rx (or "CBLOCK" "ENDC")))
 
 (defconst picasm-label-re
   (rx line-start (or letter "_")
@@ -150,55 +152,48 @@ number literals.")
   (beginning-of-line)
   (if (bobp)
       (indent-line-to 0)
-    (cond ((looking-at "^[ \t]*\\(UDATA\\(?:_SHR\\)?\\|CODE\\|__CONFIG\\|END\\)")
-           (progn
-             (indent-line-to picasm-section-marker-indent-spaces)
-             (end-of-line)))
-           (progn
-             (indent-line-to 0)
-             (end-of-line)))
+    (cond ((looking-at picasm-section-marker-re)
+           (indent-line-to picasm-section-marker-indent-spaces)
+           (end-of-line))
           ((looking-at picasm-label-re)
-          ((looking-at "^\s*$")   ; line is empty, assume we want to enter an ins
+           (indent-line-to 0)
+           (end-of-line))
+          ;; line is empty, assume we want to enter an int
+          ((looking-at (rx line-start (0+ blank) line-end))
            (indent-line-to picasm-instruction-indent-spaces))
-                                        ; instruction, but no arg. advance to argument position.
+          ;; instruction, but no arg. advance to argument position.
           ((looking-at "^[ \t]+[[:alpha:]]+$")
-           (progn
-             (end-of-line)
-             (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
-               (insert "\t"))))
-                                        ; at argument position, erase any tabs and re-tabify
+           (end-of-line)
+           (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
+             (insert "\t")))
+          ;; at argument position, erase any tabs and re-tabify
           ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+$")
-           (progn
-             (picasm-strip-trailing-whitespace)
-             (forward-word 1)
-             (save-excursion
-               (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
-                 (insert "\t")))
-             (end-of-line)))
-                                        ; complete instruction/argument pair. re-indent and leave point at eol or comment if enabled.
+           (picasm-strip-trailing-whitespace)
+           (forward-word 1)
+           (save-excursion
+             (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
+               (insert "\t")))
+           (end-of-line))
+          ;; complete instruction/argument pair. re-indent and leave point at eol or comment if enabled.
           ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]*$")
-           (progn
-             (picasm-strip-trailing-whitespace)
-             (end-of-line)
-             (if picasm-require-comment
-                 (progn
-                   (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
-                     (insert "\t"))
-                   (insert "; "))
+           (picasm-strip-trailing-whitespace)
+           (end-of-line)
+           (if picasm-require-comment
                (progn
-                 (indent-line-to picasm-instruction-indent-spaces)
-                 (end-of-line)))))
+                 (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
+                   (insert "\t"))
+                 (insert "; "))
+             (indent-line-to picasm-instruction-indent-spaces)
+             (end-of-line)))
           ;; complete instruction/argument pair with comment; leave point at eol
           ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]+;.*$")
            (end-of-line))
           ((looking-at (concat "^[ \t]*" picasm-syntheticop-keyword-re))
-           (progn
-             (indent-line-to picasm-instruction-indent-spaces)
-             (end-of-line)))
+           (indent-line-to picasm-instruction-indent-spaces)
+           (end-of-line))
           ((looking-at (concat "[ \t]*" picasm-pp-directive-re))
-           (progn
-             (indent-line-to 0)
-             (end-of-line)))
+           (indent-line-to 0)
+           (end-of-line))
           (t (message "don't know how to indent this line")))))
 
 (defun picasm-electric-comment ()
