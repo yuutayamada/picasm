@@ -4,6 +4,8 @@
 
 
 
+(require 'cl-lib)
+(require 'picasm-vars)
 
 (defun assemble-file ()
   (interactive)

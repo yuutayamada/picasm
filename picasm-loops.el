@@ -1,7 +1,7 @@
 ;; Interface to "picloops" external program
 
 (require 'cl-lib)
-(require 'picasm-external)
+(require 'picasm-vars)
 
 (defun picloops-loop-1 (label counter-a)
   "Initializes and outputs a single-stage loop"

@@ -17,6 +17,7 @@
 
 (require 'xml)
 (require 'cl-lib)
+(require 'picasm-vars)
 (require 'picasm-external)
 (require 'rx)
 
