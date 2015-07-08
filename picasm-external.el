@@ -8,15 +8,15 @@
 (defun assemble-file ()
   (interactive)
   (let* ((file (buffer-file-name (current-buffer)))
-   (chip picasm-chip-select)
-   (output-file (concat (file-name-sans-extension file) ".o")))
+         (chip picasm-chip-select)
+         (output-file (concat (file-name-sans-extension file) ".o")))
     (if picasm-show-assembler-output
-	(display-buffer (get-buffer-create "*Assembler Output*")))
+        (display-buffer (get-buffer-create "*Assembler Output*")))
     (if (not (zerop (run-assembler file chip)))
-	(message (format "Assembly of %s failed" file))
+        (message (format "Assembly of %s failed" file))
       (if (not (zerop (picasm-link output-file)))
-    (message (format "%s: Linker errors" file)))
-	(message (format "Assemble %s: Success" file)))))
+          (message (format "%s: Linker errors" file)))
+      (message (format "Assemble %s: Success" file)))))
 
 (defun run-assembler (file chip)
   (cl-case picasm-assembler-program
@@ -41,10 +41,10 @@
   "Run the Microchip MPASM assembler on FILE for CHIP.
  MPASM for Linux (via WINE) can be downloaded as part of MPLAB-X. See README.MPASM."
   (let ((flags (append (list (concat "/p" chip))   ;; no spaces between flag and arg
-           (list (concat "/r" picasm-default-radix))
-           (list (concat "/a" (upcase picasm-output-format)))
-           (list "/q")
-           (list (replace-regexp-in-string "/" "\\\\\\\\" file)))))   ; win{e,doze} confused by '/'
+                       (list (concat "/r" picasm-default-radix))
+                       (list (concat "/a" (upcase picasm-output-format)))
+                       (list "/q")
+                       (list (replace-regexp-in-string "/" "\\\\\\\\" file))))) ; win{e,doze} confused by '/'
     (picasm-asm picasm-mpasm-program flags)))
 
 (defun picasm-link (file)
