@@ -36,7 +36,7 @@
                ;; B
                "BCF" "BSF"
                ;; C
-               "CALL" "CLRF" "COMF" "CLRW" "CLRWDT"
+               "CLRF" "COMF" "CLRW" "CLRWDT"
                ;; D
                "DECF"
                ;; I
