@@ -151,55 +151,55 @@ number literals.")
   (if (bobp)
       (indent-line-to 0)
     (cond ((looking-at "^[ \t]*\\(UDATA\\(?:_SHR\\)?\\|CODE\\|__CONFIG\\|END\\)")
-     (progn
-       (indent-line-to picasm-section-marker-indent-spaces)
-       (end-of-line)))
-    ((looking-at "^[[:alnum:]_]:?")   ; label
-     (progn
-       (indent-line-to 0)
-       (end-of-line)))
-    ((looking-at "^\s*$")   ; line is empty, assume we want to enter an ins
-     (indent-line-to picasm-instruction-indent-spaces))
-    ; instruction, but no arg. advance to argument position.
-    ((looking-at "^[ \t]+[[:alpha:]]+$")
-     (progn
-       (end-of-line)
-       (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
-         (insert "\t"))))
-    ; at argument position, erase any tabs and re-tabify
-    ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+$")
-     (progn
-       (picasm-strip-trailing-whitespace)
-       (forward-word 1)
-       (save-excursion
-         (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
-     (insert "\t")))
-       (end-of-line)))
-    ; complete instruction/argument pair. re-indent and leave point at eol or comment if enabled.
-    ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]*$")
-     (progn
-       (picasm-strip-trailing-whitespace)
-       (end-of-line)
-       (if picasm-require-comment
-     (progn
-       (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
-         (insert "\t"))
-       (insert "; "))
-         (progn
-     (indent-line-to picasm-instruction-indent-spaces)
-     (end-of-line)))))
-    ;; complete instruction/argument pair with comment; leave point at eol
-    ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]+;.*$")
-     (end-of-line))
-    ((looking-at (concat "^[ \t]*" picasm-syntheticop-keyword-re))
-     (progn
-       (indent-line-to picasm-instruction-indent-spaces)
-       (end-of-line)))
-    ((looking-at (concat "[ \t]*" picasm-pp-directive-re))
-     (progn
-       (indent-line-to 0)
-       (end-of-line)))
-    (t (message "don't know how to indent this line")))))
+           (progn
+             (indent-line-to picasm-section-marker-indent-spaces)
+             (end-of-line)))
+          ((looking-at "^[[:alnum:]_]:?")   ; label
+           (progn
+             (indent-line-to 0)
+             (end-of-line)))
+          ((looking-at "^\s*$")   ; line is empty, assume we want to enter an ins
+           (indent-line-to picasm-instruction-indent-spaces))
+                                        ; instruction, but no arg. advance to argument position.
+          ((looking-at "^[ \t]+[[:alpha:]]+$")
+           (progn
+             (end-of-line)
+             (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
+               (insert "\t"))))
+                                        ; at argument position, erase any tabs and re-tabify
+          ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+$")
+           (progn
+             (picasm-strip-trailing-whitespace)
+             (forward-word 1)
+             (save-excursion
+               (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
+                 (insert "\t")))
+             (end-of-line)))
+                                        ; complete instruction/argument pair. re-indent and leave point at eol or comment if enabled.
+          ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]*$")
+           (progn
+             (picasm-strip-trailing-whitespace)
+             (end-of-line)
+             (if picasm-require-comment
+                 (progn
+                   (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
+                     (insert "\t"))
+                   (insert "; "))
+               (progn
+                 (indent-line-to picasm-instruction-indent-spaces)
+                 (end-of-line)))))
+          ;; complete instruction/argument pair with comment; leave point at eol
+          ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]+;.*$")
+           (end-of-line))
+          ((looking-at (concat "^[ \t]*" picasm-syntheticop-keyword-re))
+           (progn
+             (indent-line-to picasm-instruction-indent-spaces)
+             (end-of-line)))
+          ((looking-at (concat "[ \t]*" picasm-pp-directive-re))
+           (progn
+             (indent-line-to 0)
+             (end-of-line)))
+          (t (message "don't know how to indent this line")))))
 
 (defun picasm-electric-comment ()
   "Insert a comment at EOL, move point to it.
@@ -209,17 +209,17 @@ a semicolon."
   (let ((p (point)))
     (beginning-of-line)
     (cond ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]*$")
-     (progn
-       (picasm-strip-trailing-whitespace)
-       (end-of-line)
-       (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
-         (insert "\t"))
-       (insert "; ")))
-    ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]+;.*$")
-     (end-of-line))
-    (t (progn
-         (goto-char p)
-         (insert ";"))))))
+           (progn
+             (picasm-strip-trailing-whitespace)
+             (end-of-line)
+             (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
+               (insert "\t"))
+             (insert "; ")))
+          ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]+;.*$")
+           (end-of-line))
+          (t (progn
+               (goto-char p)
+               (insert ";"))))))
 
 (defvar picasm-mode-syntax-table
   (let ((tab (make-syntax-table)))
@@ -243,10 +243,10 @@ a semicolon."
   (define-key picasm-mode-map "\C-c\C-v" 'picasm-pk2cmd-verify)
   (define-key picasm-mode-map "\C-c\C-r" 'picasm-pk2cmd-read)
   (define-key picasm-mode-map [134217741] '(lambda ()
-               (interactive)
-               (end-of-line)
-               (newline)
-               (picasm-mode-indent-instruction-line))))
+                                             (interactive)
+                                             (end-of-line)
+                                             (newline)
+                                             (picasm-mode-indent-instruction-line))))
 
 (defcustom picasm-mode-hook nil
   "Hook run when picasm-mode is initialized."
@@ -285,28 +285,28 @@ a semicolon."
 (defun picasm-describe-chip (&optional chip-name)
   (interactive "P")
   (let ((temp-buffer-name (format "*chip (%s) description*" picasm-chip-select))
-	(chip-descr (gethash (or chip-name picasm-chip-select) pic-database)))
+        (chip-descr (gethash (or chip-name picasm-chip-select) pic-database)))
     (if (null chip-descr)
-	(error (format "%s is not in the database. Please contact the author to have it added." picasm-chip-select)))
+        (error (format "%s is not in the database. Please contact the author to have it added." picasm-chip-select)))
     (with-output-to-temp-buffer temp-buffer-name
       (set-buffer temp-buffer-name)
       (insert (format "Name: %s\nPins: %d\n"
-          (xml-get-attribute chip-descr 'Name)
-          (string-to-number (xml-get-attribute chip-descr 'PinCount))))
+                      (xml-get-attribute chip-descr 'Name)
+                      (string-to-number (xml-get-attribute chip-descr 'PinCount))))
       (let* ((periphs (car (xml-get-children chip-descr 'Peripherals)))
-       (adc (or (cl-caddar (xml-get-children periphs 'ADCChannels)) "0"))
-       (uart (or (cl-caddar (xml-get-children periphs 'UARTs)) "0"))
-       (usart (or (cl-caddar (xml-get-children periphs 'USARTs)) "0"))
-       (spi (or (cl-caddar (xml-get-children periphs 'SPI)) "0"))
-       (i2c (or (cl-caddar (xml-get-children periphs 'I2C)) "0"))
-       (ssp (or (cl-caddar (xml-get-children periphs 'SSP)) "0"))
-       (mssp (or (cl-caddar (xml-get-children periphs 'MSSP)) "0")))
-	(insert (format "ADC Channels: %s\nUARTs: %s\nUSARTs: %s\nSPI: %s\nI2C: %s\nSSP: %s\n MSSP: %s\n" adc uart usart spi i2c ssp mssp))
-	(dolist (timer (xml-get-children periphs 'Timer))
-    (insert (format "Timer: %d at %d bits\n" (string-to-number (xml-get-attribute timer 'Count)) (string-to-number (xml-get-attribute timer 'Bits))))))
+             (adc (or (cl-caddar (xml-get-children periphs 'ADCChannels)) "0"))
+             (uart (or (cl-caddar (xml-get-children periphs 'UARTs)) "0"))
+             (usart (or (cl-caddar (xml-get-children periphs 'USARTs)) "0"))
+             (spi (or (cl-caddar (xml-get-children periphs 'SPI)) "0"))
+             (i2c (or (cl-caddar (xml-get-children periphs 'I2C)) "0"))
+             (ssp (or (cl-caddar (xml-get-children periphs 'SSP)) "0"))
+             (mssp (or (cl-caddar (xml-get-children periphs 'MSSP)) "0")))
+        (insert (format "ADC Channels: %s\nUARTs: %s\nUSARTs: %s\nSPI: %s\nI2C: %s\nSSP: %s\n MSSP: %s\n" adc uart usart spi i2c ssp mssp))
+        (dolist (timer (xml-get-children periphs 'Timer))
+          (insert (format "Timer: %d at %d bits\n" (string-to-number (xml-get-attribute timer 'Count)) (string-to-number (xml-get-attribute timer 'Bits))))))
       (insert (format "Memory: %d\n" (string-to-number (cl-caddar (xml-get-children chip-descr 'Memory)))))
       (dolist (osc (xml-get-children chip-descr 'Oscillator))
-	(insert (format "Oscillator: %s\n" (xml-get-attribute osc 'Speed)))))))
+        (insert (format "Oscillator: %s\n" (xml-get-attribute osc 'Speed)))))))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.asm$" . picasm-mode))
