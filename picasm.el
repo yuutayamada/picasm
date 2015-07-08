@@ -93,7 +93,9 @@
   (rx (or "CBLOCK" (and "END" (? "C")))))
 
 (defconst picasm-mode-label-re
-  (rx (1+ (in "a-zA-Z_")) ":"))
+  (rx (or letter "_")
+      (regex "\\(?:[[:alnum:]]\\|_\\)\\{0,31\\}")
+      ":"))
 
 (defconst picasm-mode-identifier-re
   "[[:alnum:]_,<>]+[^:]")
