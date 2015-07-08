@@ -129,7 +129,7 @@
   "Whether to require a comment on every line (even if empty)."
   :type 'boolean :group 'picasm)
 
-(defun strip-trailing-whitespace ()
+(defun picasm-strip-trailing-whitespace ()
   (save-excursion
     (beginning-of-line)
     (while (re-search-forward "[ \t]+$" nil t)
@@ -160,7 +160,7 @@
     ; at argument position, erase any tabs and re-tabify
     ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+$")
      (progn
-       (strip-trailing-whitespace)
+       (picasm-strip-trailing-whitespace)
        (forward-word 1)
        (save-excursion
          (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
@@ -169,7 +169,7 @@
     ; complete instruction/argument pair. re-indent and leave point at eol or comment if enabled.
     ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]*$")
      (progn
-       (strip-trailing-whitespace)
+       (picasm-strip-trailing-whitespace)
        (end-of-line)
        (if picasm-require-comment
      (progn
@@ -201,7 +201,7 @@ a semicolon."
     (beginning-of-line)
     (cond ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]*$")
      (progn
-       (strip-trailing-whitespace)
+       (picasm-strip-trailing-whitespace)
        (end-of-line)
        (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
          (insert "\t"))
