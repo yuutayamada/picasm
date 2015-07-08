@@ -161,7 +161,7 @@
     ((looking-at "^[ \t]+[[:alpha:]]+$")
      (progn
        (end-of-line)
-       (dotimes (i picasm-instruction-argument-indent-tabs)
+       (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
          (insert "\t"))))
     ; at argument position, erase any tabs and re-tabify
     ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+$")
@@ -169,7 +169,7 @@
        (strip-trailing-whitespace)
        (forward-word 1)
        (save-excursion
-         (dotimes (i picasm-instruction-argument-indent-tabs)
+         (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
      (insert "\t")))
        (end-of-line)))
     ; complete instruction/argument pair. re-indent and leave point at eol or comment if enabled.
@@ -179,7 +179,7 @@
        (end-of-line)
        (if picasm-require-comment
      (progn
-       (dotimes (i picasm-instruction-comment-indent-tabs)
+       (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
          (insert "\t"))
        (insert "; "))
          (progn
@@ -209,7 +209,7 @@ a semicolon."
      (progn
        (strip-trailing-whitespace)
        (end-of-line)
-       (dotimes (i picasm-instruction-comment-indent-tabs)
+       (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
          (insert "\t"))
        (insert "; ")))
     ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]+;.*$")
@@ -255,7 +255,7 @@ a semicolon."
   (message "Reading the chip database...")
   (require 'xml)
   (let ((rawdb (car (xml-parse-file pic-database-file))))
-    (dolist (entry (xml-get-children rawdb 'Chip))
+    (cl-dolist (entry (xml-get-children rawdb 'Chip))
       (setf (gethash (xml-get-attribute entry 'Name) pic-database) entry))))
 
 ;;;###autoload

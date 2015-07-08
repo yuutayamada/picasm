@@ -54,7 +54,7 @@
 	(message (format "Assemble %s: Success" file)))))
 
 (defun run-assembler (file chip)
-  (case picasm-assembler-program
+  (cl-case picasm-assembler-program
     (gpasm (run-gpasm file chip))
     (mpasm (run-mpasm file chip))))
 
@@ -130,7 +130,7 @@
   (let ((output
    (run-pk2cmd (append (list "-P" picasm-chip-select)
            (list "-GP" "0-FFFFFFF")))))
-    (dolist (line (split-string output "\n"))
+    (cl-dolist (line (split-string output "\n"))
       (if (string-match "^[[:digit:]A-Fa-f]" line)
     (insert (concat line "\n"))))))
 
