@@ -65,4 +65,21 @@
           (t
            (picloops-loop-3 label (car counters) (cadr counters) (cl-caddr counters))))))
 
+;; Loop calculation uses an external C program because it's easier
+;; (read: possible) to do floating point in C.
+(defun picasm-insert-delay (label seconds clock-mhz)
+  "Insert a routine at point, using LABEL as a name component, that will cause a delay of SECONDS length assuming a clock running at CLOCK-MHZ."
+  (interactive "Mlabel: \nnSeconds: \nnClock (MHz): ")
+  (let ((counters (picasm-run-picloops seconds clock-mhz)))
+    (cond ((= (cadr counters) -1)
+           (picloops-loop-1 label (car counters)))
+          ((= (cl-caddr counters) -1)
+           (picloops-loop-2 label (car counters) (cadr counters)))
+          (t
+           (picloops-loop-3 label (car counters) (cadr counters) (cl-caddr counters))))))
+
+(defun picasm-run-picloops (seconds clock-mhz)
+  "Return value is a list of counter values, from counterA to counterC"
+  (mapcar 'string-to-number (split-string (shell-command-to-string (format "%s %f %f" picasm-picloops-program  seconds clock-mhz)))))
+
 (provide 'picasm-loops)
