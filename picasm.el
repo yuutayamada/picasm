@@ -65,15 +65,15 @@
     (and (or "b" "B") "'" (1+ (in "0-1")) "'")
     (and (or "o" "O") "'" (1+ (in "0-7")) "'")
     (and (or "q" "Q") "'" (1+ (in "0-7")) "'")
-    (and (or "d" "D") "'" (1+ (in "0-9")) "'")
-    (and (or "h" "H") "'" (1+ (in "0-9A-Fa-f")) "'")
+    (and (or "d" "D") "'" (1+ num) "'")
+    (and (or "h" "H") "'" (1+ hex) "'")
     (and (1+ (in "0-1"))       (or "b" "B"))
     (and (1+ (in "0-7"))       (or "o" "O"))
     (and (1+ (in "0-7"))       (or "q" "Q"))
-    (and (1+ (in "0-9"))       (or "d" "D"))
-    (and (1+ (in "0-9A-Fa-f")) (or "h" "H"))
-    (and "." (1+ (in "0-9")))
-    (and "0" (or "x" "X") (1+ (in "0-9A-Fa-f"))))))
+    (and (1+ num) (or "d" "D"))
+    (and (1+ hex) (or "h" "H"))
+    (and "." (1+ num))
+    (and "0" (or "x" "X") (1+ hex))))))
 
 (defconst picasm-mode-pp-directive-re
   (rx
