@@ -31,15 +31,13 @@
        ;; A
        "ADDLW" "ADDWF" "ANDLW" "ANDWF" "ANDWF"
        ;; B
-       "BCF" "BSF" "BTFSC" "BTFSS"
+       "BCF" "BSF"
        ;; C
        "CALL" "CLRF" "COMF" "CLRW" "CLRWDT"
        ;; D
-       "DECF" "DECFSZ"
-       ;; G
-       "GOTO"
+       "DECF"
        ;; I
-       "INCF" "INCFSZ" "IORWF" "IORLW"
+       "INCF" "IORWF" "IORLW"
        ;; M
        "MOVF" "MOVFW" "MOVLW" "MOVWF"
        ;; O
@@ -47,7 +45,7 @@
        ;; N
        "NOP"
        ;; R
-       "RETURN" "RETLW" "RETFIE" "RLF" "RRF"
+       "RLF" "RRF"
        ;; S
        "SLEEP" "SUBLW" "SUBWF" "SWAPF"
        ;; T
@@ -55,6 +53,14 @@
        ;; X
        "XORLW" "XORWF")
       symbol-end))
+
+(defconst picasm-one-or-two-inst-cycle-re
+  (rx symbol-start
+      (or "BTFSC" "BTFSS" "DECFSZ" "INCFSZ")))
+
+(defconst picasm-two-inst-cycle-re
+  (rx symbol-start
+      (or "CALL" "GOTO" "RETFIE" "RETLW" "RETURN")))
 
 (defconst picasm-number-literal-re
   (rx
@@ -101,14 +107,16 @@ number literals.")
       symbol-end))
 
 (defconst picasm-mode-font-lock-keywords
-  `((,picasm-instruction-re         . font-lock-keyword-face)
-    (,picasm-syntheticop-keyword-re . font-lock-builtin-face)
-    (,picasm-number-literal-re      . font-lock-constant-face)
-    (,picasm-pp-directive-re        . font-lock-preprocessor-face)
-    (,picasm-section-marker-re      . font-lock-keyword-face)
-    (,picasm-label-re               . font-lock-function-name-face)
-    (,picasm-block-re               . font-lock-type-face)
-    (,picasm-identifier-re          . font-lock-variable-name-face)))
+  `((,picasm-instruction-re           . font-lock-keyword-face)
+    (,picasm-one-or-two-inst-cycle-re . font-lock-warning-face)
+    (,picasm-two-inst-cycle-re        . font-lock-constant-face)
+    (,picasm-syntheticop-keyword-re   . font-lock-builtin-face)
+    (,picasm-number-literal-re        . font-lock-constant-face)
+    (,picasm-pp-directive-re          . font-lock-preprocessor-face)
+    (,picasm-section-marker-re        . font-lock-keyword-face)
+    (,picasm-label-re                 . font-lock-function-name-face)
+    (,picasm-block-re                 . font-lock-type-face)
+    (,picasm-identifier-re            . font-lock-variable-name-face)))
 
 (defcustom picasm-instruction-indent-spaces 6
   "Number of spaces to indent instruction lines."
