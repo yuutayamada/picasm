@@ -38,7 +38,8 @@
                  (and picasm-show-assembler-output "*Assembler Output*")))
 
 (defun run-mpasm (file chip)
-  "Run the Microchip MPASM assembler on FILE for CHIP. MPASM for Linux (via WINE) can be downloaded as part of MPLAB-X. See README.MPASM."
+  "Run the Microchip MPASM assembler on FILE for CHIP.
+ MPASM for Linux (via WINE) can be downloaded as part of MPLAB-X. See README.MPASM."
   (let ((flags (append (list (concat "/p" chip))   ;; no spaces between flag and arg
            (list (concat "/r" picasm-default-radix))
            (list (concat "/a" (upcase picasm-output-format)))
