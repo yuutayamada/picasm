@@ -25,7 +25,7 @@
   '("pagesel"
     "banksel"))
 
-(defconst picasm-mode-font-lock-instruction-re
+(defconst picasm-instruction-re
   (rx symbol-start
       (or
        ;; A
@@ -56,7 +56,7 @@
        "XORLW" "XORWF")
       symbol-end))
 
-(defconst picasm-mode-number-literal-re
+(defconst picasm-number-literal-re
   (rx
    (or
     (and (or "b" "B") "'" (1+ (in "0-1")) "'")
@@ -76,39 +76,39 @@ This RE picks up the canonical GPASM number syntaxes as well as
 legacy MPASM syntaxes for binary, octal, decimal and hexadecimal
 number literals.")
 
-(defconst picasm-mode-pp-directive-re
+(defconst picasm-pp-directive-re
   (rx
    (or "list" "equ" "constant" "res" "MACRO" "ENDM" "__CONFIG" "ORG" "RADIX"
        (and "#" (or "include" "define" "if" "else" "endif" "ifdef" "ifndef")))))
 
-(defconst picasm-mode-section-marker-re
+(defconst picasm-section-marker-re
   (rx (or (and "UDATA" (? "_SHR")) "CODE")))
 
-(defconst picasm-mode-block-re
+(defconst picasm-block-re
   (rx (or "CBLOCK" (and "END" (? "C")))))
 
-(defconst picasm-mode-label-re
+(defconst picasm-label-re
   (rx (or letter "_")
       (regex "\\(?:[[:alnum:]]\\|_\\)\\{0,31\\}")
       ":"))
 
-(defconst picasm-mode-identifier-re
+(defconst picasm-identifier-re
   "[[:alnum:]_,<>]+[^:]")
 
-(defconst picasm-mode-font-lock-syntheticop-keyword-re
+(defconst picasm-syntheticop-keyword-re
   (rx symbol-start
       (and (or "BANK" "PAGE") "SEL")
       symbol-end))
 
 (defconst picasm-mode-font-lock-keywords
-  `((,picasm-mode-font-lock-instruction-re         . font-lock-keyword-face)
-    (,picasm-mode-font-lock-syntheticop-keyword-re . font-lock-builtin-face)
-    (,picasm-mode-number-literal-re                . font-lock-constant-face)
-    (,picasm-mode-pp-directive-re                  . font-lock-preprocessor-face)
-    (,picasm-mode-section-marker-re                . font-lock-keyword-face)
-    (,picasm-mode-label-re                         . font-lock-function-name-face)
-    (,picasm-mode-block-re                         . font-lock-type-face)
-    (,picasm-mode-identifier-re                    . font-lock-variable-name-face)))
+  `((,picasm-instruction-re         . font-lock-keyword-face)
+    (,picasm-syntheticop-keyword-re . font-lock-builtin-face)
+    (,picasm-number-literal-re      . font-lock-constant-face)
+    (,picasm-pp-directive-re        . font-lock-preprocessor-face)
+    (,picasm-section-marker-re      . font-lock-keyword-face)
+    (,picasm-label-re               . font-lock-function-name-face)
+    (,picasm-block-re               . font-lock-type-face)
+    (,picasm-identifier-re          . font-lock-variable-name-face)))
 
 (defcustom picasm-instruction-indent-spaces 6
   "Number of spaces to indent instruction lines."
@@ -183,11 +183,11 @@ number literals.")
     ;; complete instruction/argument pair with comment; leave point at eol
     ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]+;.*$")
      (end-of-line))
-    ((looking-at (concat "^[ \t]*" picasm-mode-font-lock-syntheticop-keyword-re))
+    ((looking-at (concat "^[ \t]*" picasm-syntheticop-keyword-re))
      (progn
        (indent-line-to picasm-instruction-indent-spaces)
        (end-of-line)))
-    ((looking-at (concat "[ \t]*" picasm-mode-pp-directive-re))
+    ((looking-at (concat "[ \t]*" picasm-pp-directive-re))
      (progn
        (indent-line-to 0)
        (end-of-line)))
