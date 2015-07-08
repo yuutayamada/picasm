@@ -18,6 +18,7 @@
 (require 'xml)
 (require 'cl-lib)
 (require 'picasm-vars)
+(require 'picasm-rx)
 (require 'picasm-external)
 (require 'rx)
 
@@ -25,100 +26,17 @@
   '("pagesel"
     "banksel"))
 
-(defconst picasm-instruction-re
-  (rx symbol-start
-      (or
-       ;; A
-       "ADDLW" "ADDWF" "ANDLW" "ANDWF" "ANDWF"
-       ;; B
-       "BCF" "BSF"
-       ;; C
-       "CALL" "CLRF" "COMF" "CLRW" "CLRWDT"
-       ;; D
-       "DECF"
-       ;; I
-       "INCF" "IORWF" "IORLW"
-       ;; M
-       "MOVF" "MOVFW" "MOVLW" "MOVWF"
-       ;; O
-       "OPTION"
-       ;; N
-       "NOP"
-       ;; R
-       "RLF" "RRF"
-       ;; S
-       "SLEEP" "SUBLW" "SUBWF" "SWAPF"
-       ;; T
-       "TRIS"
-       ;; X
-       "XORLW" "XORWF")
-      symbol-end))
-
-(defconst picasm-one-or-two-inst-cycle-re
-  (rx symbol-start
-      (or "BTFSC" "BTFSS" "DECFSZ" "INCFSZ")))
-
-(defconst picasm-two-inst-cycle-re
-  (rx symbol-start
-      (or "CALL" "GOTO" "RETFIE" "RETLW" "RETURN")))
-
-(defconst picasm-number-literal-re
-  (rx
-   (or
-    (and (or "b" "B") "'" (1+ (in "0-1")) "'")
-    (and (or "o" "O") "'" (1+ (in "0-7")) "'")
-    (and (or "q" "Q") "'" (1+ (in "0-7")) "'")
-    (and (or "d" "D") "'" (1+ num) "'")
-    (and (or "h" "H") "'" (1+ hex) "'")
-    (and (1+ (in "0-1"))       (or "b" "B"))
-    (and (1+ (in "0-7"))       (or "o" "O"))
-    (and (1+ (in "0-7"))       (or "q" "Q"))
-    (and (1+ num) (or "d" "D"))
-    (and (1+ hex) (or "h" "H"))
-    (and "." (1+ num))
-    (and "0" (or "x" "X") (1+ hex))))
-  "Regex for number literal.
-This RE picks up the canonical GPASM number syntaxes as well as
-legacy MPASM syntaxes for binary, octal, decimal and hexadecimal
-number literals.")
-
-(defconst picasm-pp-directive-re
-  (rx
-   (or "list" "equ" "constant" "res" "MACRO" "ENDM" "ORG" "RADIX"
-       (and "#" (or "include" "define" "if" "else" "endif" "ifdef" "ifndef")))))
-
-(defconst picasm-section-marker-re
-  (rx line-start (* blank)
-      (or (and "UDATA" (? "_SHR")) "CODE" "__CONFIG" "END")
-      line-end))
-
-(defconst picasm-block-re
-  (rx (or "CBLOCK" "ENDC")))
-
-(defconst picasm-label-re
-  (rx line-start (or letter "_")
-      (regex "\\(?:[[:alnum:]]\\|_\\)\\{0,31\\}")
-      ":"))
-
-(defconst picasm-identifier-re
-  "[[:alnum:]_,<>]+[^:]")
-
-(defconst picasm-syntheticop-keyword-re
-  (rx symbol-start
-      (and (or "BANK" "PAGE") "SEL")
-      symbol-end))
-
 (defconst picasm-mode-font-lock-keywords
-  `((,picasm-instruction-re           . font-lock-keyword-face)
-    (,picasm-one-or-two-inst-cycle-re . font-lock-warning-face)
-    (,picasm-two-inst-cycle-re        . font-lock-constant-face)
-    (,picasm-syntheticop-keyword-re   . font-lock-builtin-face)
-    (,picasm-number-literal-re        . font-lock-constant-face)
-    (,picasm-pp-directive-re          . font-lock-preprocessor-face)
-    (,picasm-section-marker-re        . font-lock-keyword-face)
-    (,picasm-label-re                 . font-lock-function-name-face)
-    (,picasm-block-re                 . font-lock-type-face)
-    (,picasm-identifier-re            . font-lock-variable-name-face)))
+  `((,(picasm-rx inst) . font-lock-keyword-face)
+    (,(picasm-rx inst-one-or-two-cycle) . font-lock-warning-face)
+    (,(picasm-rx inst-two-cycle) . font-lock-constant-face)
+    (,(picasm-rx syntheticop-keyword) . font-lock-builtin-face)
+    (,(picasm-rx numbers) . font-lock-constant-face)
+    (,(picasm-rx pp-directive) . font-lock-preprocessor-face)
+    (,(picasm-rx section-marker) . font-lock-keyword-face)
+    (,(picasm-rx label) . font-lock-function-name-face)
+    (,(picasm-rx block-re) . font-lock-type-face)
+    (,(picasm-rx identifier) . font-lock-variable-name-face)))
 
 (defcustom picasm-instruction-indent-spaces 6
   "Number of spaces to indent instruction lines."
@@ -152,12 +70,10 @@ number literals.")
   (beginning-of-line)
   (if (bobp)
       (indent-line-to 0)
-    (cond ((looking-at picasm-section-marker-re)
-           (indent-line-to picasm-section-marker-indent-spaces)
-           (end-of-line))
-          ((looking-at picasm-label-re)
-           (indent-line-to 0)
-           (end-of-line))
+    (cond ((looking-at (picasm-rx section-marker))
+           (indent-line-to picasm-section-marker-indent-spaces))
+          ((looking-at (picasm-rx label))
+           (indent-line-to 0))
           ;; line is empty, assume we want to enter an int
           ((looking-at (rx line-start (0+ blank) line-end))
            (indent-line-to picasm-instruction-indent-spaces))
@@ -188,10 +104,10 @@ number literals.")
           ;; complete instruction/argument pair with comment; leave point at eol
           ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]+;.*$")
            (end-of-line))
-          ((looking-at (concat "^[ \t]*" picasm-syntheticop-keyword-re))
+          ((looking-at (concat "^[ \t]*" (picasm-rx syntheticop-keyword)))
            (indent-line-to picasm-instruction-indent-spaces)
            (end-of-line))
-          ((looking-at (concat "[ \t]*" picasm-pp-directive-re))
+          ((looking-at (concat "[ \t]*" (picasm-rx pp-directive)))
            (indent-line-to 0)
            (end-of-line))
           (t (message "don't know how to indent this line")))))
