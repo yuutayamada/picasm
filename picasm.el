@@ -154,10 +154,10 @@ number literals.")
            (progn
              (indent-line-to picasm-section-marker-indent-spaces)
              (end-of-line)))
-          ((looking-at "^[[:alnum:]_]:?")   ; label
            (progn
              (indent-line-to 0)
              (end-of-line)))
+          ((looking-at picasm-label-re)
           ((looking-at "^\s*$")   ; line is empty, assume we want to enter an ins
            (indent-line-to picasm-instruction-indent-spaces))
                                         ; instruction, but no arg. advance to argument position.
