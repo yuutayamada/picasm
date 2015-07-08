@@ -20,16 +20,9 @@
 (require 'picasm-external)
 (require 'rx)
 
-(defcustom pic-database-file "~/.emacs.d/picasm/chips.xml"
-  "Location of the PIC chip database (XML-format)."
-  :type 'string :group 'picasm)
-
-(defvar pic-database (make-hash-table :test 'equal))
-
 (defconst picasm-mode-synthetic-instructions
   '("pagesel"
     "banksel"))
-
 
 (defconst picasm-mode-font-lock-instruction-re
   (rx symbol-start
@@ -218,8 +211,6 @@ a semicolon."
          (goto-char p)
          (insert ";"))))))
 
-(defvar picasm-chip-select "")
-
 (defvar picasm-mode-syntax-table
   (let ((tab (make-syntax-table)))
     (modify-syntax-entry ?\; "<" tab)
@@ -306,11 +297,6 @@ a semicolon."
       (insert (format "Memory: %d\n" (string-to-number (cl-caddar (xml-get-children chip-descr 'Memory)))))
       (dolist (osc (xml-get-children chip-descr 'Oscillator))
 	(insert (format "Oscillator: %s\n" (xml-get-attribute osc 'Speed)))))))
-
-
-(defcustom picasm-show-assembler-output nil
-  "Whether to display assembler output in a new window"
-  :type 'boolean :group 'picasm)
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.asm$" . picasm-mode))
