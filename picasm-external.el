@@ -60,16 +60,17 @@
 
 (defun run-gpasm (file chip)
   "Run the GNU gputils gpasm assembler on FILE for CHIP."
-  (let ((flags (append (list (mapconcat '(lambda (dir)
-             (concat "-I " dir)) picasm-includes " "))
-           (list "-p" chip)
-           (list "-r" picasm-default-radix)
-           (list "-c")
-           (list file))))
+  (let ((flags (append (list (mapconcat #'(lambda (dir) (concat "-I " dir)) picasm-includes " "))
+                       (list "-p" chip)
+                       (list "-r" picasm-default-radix)
+                       (list "-c")
+                       (list file))))
     (picasm-asm picasm-gpasm-program flags)))
 
 (defun picasm-asm (program flags)
-  (shell-command (concat program " " (mapconcat '(lambda (x) x) flags " ")) (and picasm-show-assembler-output "*Assembler Output*")))
+  ""
+  (shell-command (concat program " " (mapconcat #'(lambda (x) x) flags " "))
+                 (and picasm-show-assembler-output "*Assembler Output*")))
 
 (defun run-mpasm (file chip)
   "Run the Microchip MPASM assembler on FILE for CHIP. MPASM for Linux (via WINE) can be downloaded as part of MPLAB-X. See README.MPASM."
@@ -85,8 +86,7 @@
   (let ((flags (append (list "-o" (concat (file-name-sans-extension file) ".hex"))
            (list "-a" picasm-output-format)
            (list file))))
-    (shell-command (concat picasm-gplink-program " " (mapconcat '(lambda (x) x) flags " ")))))
-
+    (shell-command (concat picasm-gplink-program " " (mapconcat #'(lambda (x) x) flags " ")))))
 
 (defun picasm-run-picloops (seconds clock-mhz)
   "Return value is a list of counter values, from counterA to counterC"
