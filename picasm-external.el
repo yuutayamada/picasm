@@ -1,8 +1,9 @@
+;;; picasm-external.el --- -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;;; Code:
 ;; Interfaces to external programs and output parsers.
-
-
-
-
 
 (require 'cl-lib)
 (require 'picasm-vars)

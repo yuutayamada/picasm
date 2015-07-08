@@ -1,4 +1,4 @@
-;; Interface to "picloops" external program
+;; Interface to "picloops" external program -*- lexical-binding: t; -*-
 
 (require 'cl-lib)
 (require 'picasm-vars)

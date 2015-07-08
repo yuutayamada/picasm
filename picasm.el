@@ -1,4 +1,4 @@
-;; PIC ASM editing mode
+;; PIC ASM editing mode -*- lexical-binding: t; -*-
 ;; supports PIC10, PIC12 and PIC16 instruction sets
 ;;
 ;; Daniel Debertin <dan@mapcar.org>
