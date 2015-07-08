@@ -94,7 +94,7 @@ number literals.")
   (rx (or "CBLOCK" (and "END" (? "C")))))
 
 (defconst picasm-label-re
-  (rx (or letter "_")
+  (rx line-start (or letter "_")
       (regex "\\(?:[[:alnum:]]\\|_\\)\\{0,31\\}")
       ":"))
 
