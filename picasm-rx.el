@@ -109,6 +109,9 @@ This variant of `rx' supports common picasm named REGEXPS."
             (t
              (rx-to-string (car regexps) t)))))
 
+  (add-to-list 'picasm-rx-constituents
+               (cons 'all-inst (picasm-rx (or inst inst-one-or-two-cycle inst-two-cycle))))
+
   ) ; end of ‘eval-and-compile’
 
 (provide 'picasm-rx)
