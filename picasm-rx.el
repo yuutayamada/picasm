@@ -27,7 +27,7 @@
 
 (eval-and-compile
 
-  (defconst picasm-rx-constituents
+  (defvar picasm-rx-constituents
     `((inst
        . ,(rx symbol-start
               (or
