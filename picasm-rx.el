@@ -88,9 +88,13 @@
       (block-re
        . ,(rx (or "CBLOCK" "ENDC")))
       (label
-       . ,(rx line-start (or letter "_")
-              (regex "\\(?:[[:alnum:]]\\|_\\)\\{0,31\\}")
-              ":"))
+       . ,(rx line-start
+              (group
+               (or (any "a-zA-Z_"))
+               (regex "\\(?:[[:alnum:]]\\|_\\)\\{0,31\\}")
+               ":")
+              (* blank)
+              (? ";" (0+ any) line-end)))
       (identifier
        . "[[:alnum:]_,<>]+[^:]")
       (syntheticop-keyword
