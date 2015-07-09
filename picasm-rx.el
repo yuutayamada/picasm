@@ -97,7 +97,7 @@
                 (? ";" (0+ any) line-end))))
       (identifier
        . "[[:alnum:]_,<>]+[^:]")
-      (comment . ,(rx (? ";" (0+ any) line-end)))
+      (comment . ,(rx (* blank) (? ";" (0+ any) line-end)))
       (syntheticop-keyword
        . ,(rx symbol-start
               (and (or "BANK" "PAGE") "SEL")
