@@ -96,7 +96,7 @@
                 (* blank)
                 (? ";" (0+ any) line-end))))
       (identifier
-       . "[[:alnum:]_,<>]+[^:]")
+       . ,(rx (1+ (or alnum "_" "," "<" ">")) (not (any ":"))))
       (comment . ,(rx (* blank) (? ";" (0+ any) line-end)))
       (syntheticop-keyword
        . ,(rx symbol-start
