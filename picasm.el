@@ -31,8 +31,8 @@
     (,(picasm-rx numbers)               . font-lock-constant-face)
     (,(picasm-rx pp-directive)          . font-lock-preprocessor-face)
     (,(picasm-rx section-marker)        . font-lock-keyword-face)
-    ;; (,(picasm-rx identifier)            . font-lock-variable-name-face)
-    (,(picasm-rx no-indent)           . (1 font-lock-function-name-face))))
+    (,(picasm-rx no-indent)             . (1 font-lock-function-name-face))
+    (,(picasm-rx identifier)            . font-lock-variable-name-face)))
 
 (defun picasm-strip-trailing-whitespace ()
   (save-excursion
