@@ -125,6 +125,10 @@ This variant of `rx' supports common picasm named REGEXPS."
                                 args comment)))
 
   (add-to-list 'picasm-rx-constituents
+               (cons 'condition-block
+                     (picasm-rx inst-one-or-two-cycle (0+ any) comment)))
+
+  (add-to-list 'picasm-rx-constituents
                (cons 'no-indent
                      (picasm-rx line-start (group (or label "cblock" "endc"))
                                 args comment)))

@@ -54,6 +54,8 @@
                 ((looking-back ; Indent starts at LABEL and CBLOCK
                   (picasm-rx start-block) nil)
                  picasm-instruction-indent-spaces)
+                ((looking-back (picasm-rx condition-block) nil)
+                 picasm-condition-block-indent-spaces)
                 (t ; use previous indent
                  (back-to-indentation)
                  (current-column))))))))
