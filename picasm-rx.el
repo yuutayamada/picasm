@@ -95,6 +95,13 @@
                ":")
               (* blank)
               (? ";" (0+ any) line-end)))
+      (cblock
+       . ,(rx
+           (and symbol-start "cblock" symbol-end
+                (* blank)
+                (1+ alnum)
+                (* blank)
+                (? ";" (0+ any) line-end))))
       (endc
        . ,(rx
            (and symbol-start "endc" symbol-end
@@ -124,12 +131,7 @@ This variant of `rx' supports common picasm named REGEXPS."
 
   (add-to-list 'picasm-rx-constituents
                (cons 'start-block
-                     (picasm-rx (or label
-                                    (and symbol-start (or "cblock") symbol-end
-                                         (* blank)
-                                         (1+ alnum)
-                                         (* blank)
-                                         (? ";" (0+ any) line-end))))))
+                     (picasm-rx (or label cblock))))
   ) ; end of ‘eval-and-compile’
 
 (provide 'picasm-rx)
