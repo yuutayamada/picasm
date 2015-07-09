@@ -31,9 +31,8 @@
     (,(picasm-rx numbers)               . font-lock-constant-face)
     (,(picasm-rx pp-directive)          . font-lock-preprocessor-face)
     (,(picasm-rx section-marker)        . font-lock-keyword-face)
-    (,(picasm-rx label)                 . (1 font-lock-function-name-face))
-    (,(picasm-rx block-re)              . font-lock-type-face)
-    (,(picasm-rx identifier)            . font-lock-variable-name-face)))
+    ;; (,(picasm-rx identifier)            . font-lock-variable-name-face)
+    (,(picasm-rx no-indent)           . (1 font-lock-function-name-face))))
 
 (defun picasm-strip-trailing-whitespace ()
   (save-excursion
@@ -47,8 +46,7 @@
   (let ((indent
          (save-excursion
            (back-to-indentation)
-           (unless ; Don't indent if it's on label and endc
-               (looking-at (picasm-rx (or label endc)))
+           (unless (looking-at (picasm-rx no-indent))
              (if (looking-at (picasm-rx section-marker))
                  picasm-section-marker-indent-spaces
              (forward-comment -1)
