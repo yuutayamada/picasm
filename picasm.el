@@ -51,8 +51,7 @@
                  picasm-section-marker-indent-spaces
                (forward-comment -1)
                (cond
-                ((looking-back ; Indent starts at LABEL and CBLOCK
-                  (picasm-rx start-block) nil)
+                ((looking-back (picasm-rx start-block) nil)
                  picasm-instruction-indent-spaces)
                 ((looking-back (picasm-rx condition-block) nil)
                  picasm-condition-block-indent-spaces)
