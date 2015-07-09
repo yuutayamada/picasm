@@ -38,10 +38,6 @@
     (,(picasm-rx block-re) . font-lock-type-face)
     (,(picasm-rx identifier) . font-lock-variable-name-face)))
 
-(defcustom picasm-require-comment t
-  "Whether to require a comment on every line (even if empty)."
-  :type 'boolean :group 'picasm)
-
 (defun picasm-strip-trailing-whitespace ()
   (save-excursion
     (beginning-of-line)
