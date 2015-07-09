@@ -97,7 +97,6 @@
                 (? ";" (0+ any) line-end))))
       (identifier
        . "[[:alnum:]_,<>]+[^:]")
-      (args    . ,(rx (? (* (* blank) (? (0+ alnum))))))
       (comment . ,(rx (? ";" (0+ any) line-end)))
       (syntheticop-keyword
        . ,(rx symbol-start
@@ -114,6 +113,9 @@ This variant of `rx' supports common picasm named REGEXPS."
              (rx-to-string `(and ,@regexps) t))
             (t
              (rx-to-string (car regexps) t)))))
+
+  (add-to-list 'picasm-rx-constituents
+               (cons 'args (picasm-rx (? (* (* blank) identifier)))))
 
   (add-to-list 'picasm-rx-constituents
                (cons 'all-inst
