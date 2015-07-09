@@ -20,6 +20,23 @@
 
 (defvar picasm-chip-select "")
 
+;; Indent
+(defcustom picasm-instruction-indent-spaces 8
+  "Number of spaces to indent instruction lines."
+  :type 'integer :group 'picasm)
+
+(defcustom picasm-section-marker-indent-spaces 8
+  "Number of spaces to indent section markers."
+  :type 'integer :group 'picasm)
+
+(defcustom picasm-instruction-argument-indent-tabs 2
+  "Number of tabs to insert after instructions, before arguments."
+  :type 'integer :group 'picasm)
+
+(defcustom picasm-instruction-comment-indent-tabs 2
+  "Number of tabs to indent comments."
+  :type 'integer :group 'picasm)
+
 ;; from picasm-external.el
 (defcustom picasm-assembler-program 'gpasm
   "Select either GPASM or MPASM to assemble source files"
