@@ -118,10 +118,6 @@ a semicolon."
                                              (newline)
                                              (picasm-mode-indent-instruction-line))))
 
-(defcustom picasm-mode-hook nil
-  "Hook run when picasm-mode is initialized."
-  :type 'hook :group 'picasm)
-
 (defun read-pic-database ()
   (message "Reading the chip database...")
   (require 'xml)
