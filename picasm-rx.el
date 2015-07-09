@@ -85,23 +85,11 @@
        . ,(rx symbol-start
               (or (and "UDATA" (? "_SHR")) "CODE" "__CONFIG" "END")
               symbol-end))
-      (block-re
-       . ,(rx (or "CBLOCK" "ENDC")))
       (label
-       . ,(rx line-start
-              (group
-               (or (any "a-zA-Z_"))
-               (regex "\\(?:[[:alnum:]]\\|_\\)\\{0,31\\}")
-               ":")
-              (* blank)
-              (? ";" (0+ any) line-end)))
-      (cblock
        . ,(rx
-           (and symbol-start "cblock" symbol-end
-                (* blank)
-                (1+ alnum)
-                (* blank)
-                (? ";" (0+ any) line-end))))
+           (or (any "a-zA-Z_"))
+           (regex "\\(?:[[:alnum:]]\\|_\\)\\{0,31\\}")
+           ":"))
       (endc
        . ,(rx
            (and symbol-start "endc" symbol-end
@@ -109,6 +97,8 @@
                 (? ";" (0+ any) line-end))))
       (identifier
        . "[[:alnum:]_,<>]+[^:]")
+      (args    . ,(rx (? (* (* blank) (? (0+ alnum))))))
+      (comment . ,(rx (? ";" (0+ any) line-end)))
       (syntheticop-keyword
        . ,(rx symbol-start
               (and (or "BANK" "PAGE") "SEL")
@@ -131,7 +121,9 @@ This variant of `rx' supports common picasm named REGEXPS."
 
   (add-to-list 'picasm-rx-constituents
                (cons 'start-block
-                     (picasm-rx (or label cblock))))
+                     (picasm-rx line-start (group (or label "cblock"))
+                                args comment)))
+
   ) ; end of ‘eval-and-compile’
 
 (provide 'picasm-rx)
