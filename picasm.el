@@ -50,20 +50,14 @@
   (let ((indent
          (save-excursion
            (back-to-indentation)
-           (unless (looking-at (picasm-rx (or label (and symbol-start "endc" symbol-end
-                                                         (* blank)
-                                                         (? ";" (0+ any) line-end)))))
+           (unless ; Don't indent if it's on label and endc
+               (looking-at (picasm-rx (or label endc)))
              (if (looking-at (picasm-rx section-marker))
                  picasm-section-marker-indent-spaces
              (forward-comment -1)
              (cond
-              ((looking-back (picasm-rx  (or label
-                                             (and symbol-start (or "cblock") symbol-end
-                                                  (* blank)
-                                                  (1+ alnum)
-                                                  (* blank)
-                                                  (? ";" (0+ any) line-end))))
-                             nil)
+              ;; Indent starts at LABEL and CBLOCK
+              ((looking-back (picasm-rx start-block) nil)
                picasm-instruction-indent-spaces)
               (t ; use previous indent
                (back-to-indentation)

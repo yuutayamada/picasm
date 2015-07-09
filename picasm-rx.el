@@ -95,6 +95,11 @@
                ":")
               (* blank)
               (? ";" (0+ any) line-end)))
+      (endc
+       . ,(rx
+           (and symbol-start "endc" symbol-end
+                (* blank)
+                (? ";" (0+ any) line-end))))
       (identifier
        . "[[:alnum:]_,<>]+[^:]")
       (syntheticop-keyword
@@ -114,8 +119,17 @@ This variant of `rx' supports common picasm named REGEXPS."
              (rx-to-string (car regexps) t)))))
 
   (add-to-list 'picasm-rx-constituents
-               (cons 'all-inst (picasm-rx (or inst inst-one-or-two-cycle inst-two-cycle))))
+               (cons 'all-inst
+                     (picasm-rx (or inst inst-one-or-two-cycle inst-two-cycle))))
 
+  (add-to-list 'picasm-rx-constituents
+               (cons 'start-block
+                     (picasm-rx (or label
+                                    (and symbol-start (or "cblock") symbol-end
+                                         (* blank)
+                                         (1+ alnum)
+                                         (* blank)
+                                         (? ";" (0+ any) line-end))))))
   ) ; end of ‘eval-and-compile’
 
 (provide 'picasm-rx)
