@@ -67,50 +67,29 @@
 (defun picasm-mode-indent-instruction-line ()
   "Indent an instruction."
   (interactive)
-  (beginning-of-line)
-  (if (bobp)
-      (indent-line-to 0)
-    (cond ((looking-at (picasm-rx section-marker))
-           (indent-line-to picasm-section-marker-indent-spaces))
-          ((looking-at (picasm-rx label))
-           (indent-line-to 0))
-          ;; line is empty, assume we want to enter an int
-          ((looking-at (rx line-start (0+ blank) line-end))
-           (indent-line-to picasm-instruction-indent-spaces))
-          ;; instruction, but no arg. advance to argument position.
-          ((looking-at "^[ \t]+[[:alpha:]]+$")
-           (end-of-line)
-           (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
-             (insert "\t")))
-          ;; at argument position, erase any tabs and re-tabify
-          ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+$")
-           (picasm-strip-trailing-whitespace)
-           (forward-word 1)
-           (save-excursion
-             (cl-dotimes (_ picasm-instruction-argument-indent-tabs)
-               (insert "\t")))
-           (end-of-line))
-          ;; complete instruction/argument pair. re-indent and leave point at eol or comment if enabled.
-          ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]*$")
-           (picasm-strip-trailing-whitespace)
-           (end-of-line)
-           (if picasm-require-comment
-               (progn
-                 (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
-                   (insert "\t"))
-                 (insert "; "))
-             (indent-line-to picasm-instruction-indent-spaces)
-             (end-of-line)))
-          ;; complete instruction/argument pair with comment; leave point at eol
-          ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]+;.*$")
-           (end-of-line))
-          ((looking-at (concat "^[ \t]*" (picasm-rx syntheticop-keyword)))
-           (indent-line-to picasm-instruction-indent-spaces)
-           (end-of-line))
-          ((looking-at (concat "[ \t]*" (picasm-rx pp-directive)))
-           (indent-line-to 0)
-           (end-of-line))
-          (t (message "don't know how to indent this line")))))
+  (let ((indent
+         (save-excursion
+           (back-to-indentation)
+           (unless (looking-at (picasm-rx (or label (and symbol-start "endc" symbol-end
+                                                         (* blank)
+                                                         (? ";" (0+ any) line-end)))))
+             (if (looking-at (picasm-rx section-marker))
+                 picasm-section-marker-indent-spaces
+             (forward-comment -1)
+             (cond
+              ((looking-back (picasm-rx  (or label
+                                             (and symbol-start (or "cblock") symbol-end
+                                                  (* blank)
+                                                  (1+ alnum)
+                                                  (* blank)
+                                                  (? ";" (0+ any) line-end))))
+                             nil)
+               picasm-instruction-indent-spaces)
+              (t ; use previous indent
+               (back-to-indentation)
+               (current-column))))))))
+    (when indent
+      (indent-line-to indent))))
 
 (defun picasm-electric-comment ()
   "Insert a comment at EOL, move point to it.
