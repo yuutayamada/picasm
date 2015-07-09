@@ -82,9 +82,9 @@
            (or "list" "equ" "constant" "res" "MACRO" "ENDM" "ORG" "RADIX"
                (and "#" (or "include" "define" "if" "else" "endif" "ifdef" "ifndef")))))
       (section-marker
-       . ,(rx line-start (* blank)
+       . ,(rx symbol-start
               (or (and "UDATA" (? "_SHR")) "CODE" "__CONFIG" "END")
-              line-end))
+              symbol-end))
       (block-re
        . ,(rx (or "CBLOCK" "ENDC")))
       (label
