@@ -79,17 +79,16 @@ a semicolon."
   (let ((p (point)))
     (beginning-of-line)
     (cond ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]*$")
-           (progn
-             (picasm-strip-trailing-whitespace)
-             (end-of-line)
-             (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
-               (insert "\t"))
-             (insert "; ")))
+           (picasm-strip-trailing-whitespace)
+           (end-of-line)
+           (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
+             (insert "\t"))
+           (insert "; "))
           ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]+;.*$")
            (end-of-line))
-          (t (progn
-               (goto-char p)
-               (insert ";"))))))
+          (t
+           (goto-char p)
+           (insert ";")))))
 
 (defvar picasm-mode-syntax-table
   (let ((tab (make-syntax-table)))
