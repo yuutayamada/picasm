@@ -57,7 +57,8 @@
                  picasm-condition-block-indent-spaces)
                 (t ; use previous indent
                  (back-to-indentation)
-                 (current-column))))))))
+                 (min (current-column)
+                      picasm-instruction-indent-spaces))))))))
     (when indent
       (indent-line-to indent))))
 
