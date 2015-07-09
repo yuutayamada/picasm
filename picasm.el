@@ -49,14 +49,14 @@
            (unless (looking-at (picasm-rx no-indent))
              (if (looking-at (picasm-rx section-marker))
                  picasm-section-marker-indent-spaces
-             (forward-comment -1)
-             (cond
-              ((looking-back ; Indent starts at LABEL and CBLOCK
-                (picasm-rx start-block) nil)
-               picasm-instruction-indent-spaces)
-              (t ; use previous indent
-               (back-to-indentation)
-               (current-column))))))))
+               (forward-comment -1)
+               (cond
+                ((looking-back ; Indent starts at LABEL and CBLOCK
+                  (picasm-rx start-block) nil)
+                 picasm-instruction-indent-spaces)
+                (t ; use previous indent
+                 (back-to-indentation)
+                 (current-column))))))))
     (when indent
       (indent-line-to indent))))
 
