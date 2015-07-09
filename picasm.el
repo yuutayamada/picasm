@@ -1,7 +1,8 @@
 ;; PIC ASM editing mode -*- lexical-binding: t; -*-
 ;; supports PIC10, PIC12 and PIC16 instruction sets
 ;;
-;; Daniel Debertin <dan@mapcar.org>
+;; Author: Daniel Debertin <dan@mapcar.org>
+;; Maintainer: Yuta Yamada <cokesboy@gmail.com>
 ;;
 ;; Features:
 ;;
