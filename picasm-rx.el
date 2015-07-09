@@ -79,7 +79,7 @@
             (and "0" (or "x" "X") (1+ hex)))))
       (pp-directive
        . ,(rx
-           (or "list" "equ" "constant" "res" "MACRO" "ENDM" "ORG" "RADIX"
+           (or "list" "equ" "constant" "res" "MACRO" "ENDM" "ORG" "RADIX" "PAGESEL" "BANKSEL"
                (and "#" (or "include" "define" "if" "else" "endif" "ifdef" "ifndef")))))
       (section-marker
        . ,(rx symbol-start

@@ -23,10 +23,6 @@
 (require 'picasm-external)
 (require 'rx)
 
-(defconst picasm-mode-synthetic-instructions
-  '("pagesel"
-    "banksel"))
-
 (defconst picasm-mode-font-lock-keywords
   `((,(picasm-rx inst)                  . font-lock-keyword-face)
     (,(picasm-rx inst-one-or-two-cycle) . font-lock-warning-face)
