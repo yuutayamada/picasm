@@ -118,7 +118,7 @@ a semicolon."
                                              (newline)
                                              (picasm-mode-indent-instruction-line))))
 
-(defun read-pic-database ()
+(defun picasm-read-pic-database ()
   (message "Reading the chip database...")
   (require 'xml)
   (let ((rawdb (car (xml-parse-file pic-database-file))))
@@ -140,7 +140,7 @@ a semicolon."
   (when picasm-use-default-keybindings
     (picasm-setup-default-keybindings))
   (when (= (hash-table-size pic-database) 0)
-    (read-pic-database)))
+    (picasm-read-pic-database)))
 
 (defun picasm-select-chip (newchip)
   (interactive "MSelect chip: ")
