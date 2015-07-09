@@ -20,6 +20,13 @@
 
 (defvar picasm-chip-select "")
 
+;; Syntax table
+(defvar picasm-mode-syntax-table
+  (let ((tab (make-syntax-table)))
+    (modify-syntax-entry ?\; "<" tab)
+    (modify-syntax-entry ?\n ">" tab)
+    tab))
+
 ;; key bind
 (defvar picasm-mode-map
   (let* ((map (make-sparse-keymap)))
