@@ -38,7 +38,7 @@
     (,(picasm-rx block-re) . font-lock-type-face)
     (,(picasm-rx identifier) . font-lock-variable-name-face)))
 
-(defcustom picasm-instruction-indent-spaces 6
+(defcustom picasm-instruction-indent-spaces 8
   "Number of spaces to indent instruction lines."
   :type 'integer :group 'picasm)
 
