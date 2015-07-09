@@ -96,27 +96,6 @@ a semicolon."
     (modify-syntax-entry ?\n ">" tab)
     tab))
 
-(defvar picasm-mode-map (make-keymap))
-
-(defcustom picasm-use-default-keybindings t
-  "Whether to assume you want to use my keybindings (recommended!)."
-  :type 'boolean :group 'picasm)
-
-(defun picasm-setup-default-keybindings ()
-  "Default keybinds."
-  (define-key picasm-mode-map "\t" 'picasm-mode-indent-instruction-line)
-  (define-key picasm-mode-map ";" 'picasm-electric-comment)
-  (define-key picasm-mode-map "\C-c\C-c" 'assemble-file)
-  (define-key picasm-mode-map "\C-c\C-p" 'picasm-pk2cmd-program)
-  (define-key picasm-mode-map "\C-c\C-e" 'picasm-pk2cmd-erase)
-  (define-key picasm-mode-map "\C-c\C-v" 'picasm-pk2cmd-verify)
-  (define-key picasm-mode-map "\C-c\C-r" 'picasm-pk2cmd-read)
-  (define-key picasm-mode-map [134217741] '(lambda ()
-                                             (interactive)
-                                             (end-of-line)
-                                             (newline)
-                                             (picasm-mode-indent-instruction-line))))
-
 (defun picasm-read-pic-database ()
   (message "Reading the chip database...")
   (require 'xml)
@@ -136,8 +115,6 @@ a semicolon."
   (set (make-local-variable 'font-lock-keywords)
        '(picasm-mode-font-lock-keywords))
   (set (make-local-variable 'comment-start) ";")
-  (when picasm-use-default-keybindings
-    (picasm-setup-default-keybindings))
   (when (= (hash-table-size pic-database) 0)
     (picasm-read-pic-database)))
 

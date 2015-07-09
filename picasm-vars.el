@@ -20,6 +20,24 @@
 
 (defvar picasm-chip-select "")
 
+;; key bind
+(defvar picasm-mode-map
+  (let* ((map (make-sparse-keymap)))
+    (define-key map "\t" 'picasm-mode-indent-instruction-line)
+    (define-key map ";" 'picasm-electric-comment)
+    (define-key map "\C-c\C-c" 'assemble-file)
+    (define-key map "\C-c\C-p" 'picasm-pk2cmd-program)
+    (define-key map "\C-c\C-e" 'picasm-pk2cmd-erase)
+    (define-key map "\C-c\C-v" 'picasm-pk2cmd-verify)
+    (define-key map "\C-c\C-r" 'picasm-pk2cmd-read)
+    (define-key map (kbd "M-RET")
+      '(lambda ()
+         (interactive)
+         (end-of-line)
+         (newline)
+         (picasm-mode-indent-instruction-line)))
+    map))
+
 ;; Indent
 (defcustom picasm-instruction-indent-spaces 8
   "Number of spaces to indent instruction lines."
