@@ -21,6 +21,7 @@
 (require 'picasm-vars)
 (require 'picasm-rx)
 (require 'picasm-external)
+(require 'picasm-eldoc)
 (require 'rx)
 
 (defconst picasm-mode-font-lock-keywords
@@ -101,7 +102,8 @@ a semicolon."
        '(picasm-mode-font-lock-keywords))
   (set (make-local-variable 'comment-start) ";")
   (when (= (hash-table-size pic-database) 0)
-    (picasm-read-pic-database)))
+    (picasm-read-pic-database))
+  (picasm-eldoc-setup))
 
 (defun picasm-select-chip (newchip)
   (interactive "MSelect chip: ")
