@@ -47,19 +47,18 @@
   (let ((indent
          (save-excursion
            (back-to-indentation)
-           (unless (looking-at (picasm-rx no-indent))
-             (if (looking-at (picasm-rx section-marker))
-                 picasm-section-marker-indent-spaces
-               (forward-comment -1)
-               (cond
-                ((looking-back (picasm-rx start-block) nil)
-                 picasm-instruction-indent-spaces)
-                ((looking-back (picasm-rx condition-block) nil)
-                 picasm-condition-block-indent-spaces)
-                (t ; use previous indent
-                 (back-to-indentation)
-                 (min (current-column)
-                      picasm-instruction-indent-spaces))))))))
+           (if (looking-at (picasm-rx section-marker))
+               picasm-section-marker-indent-spaces
+             (forward-comment -1)
+             (cond
+              ((looking-back (picasm-rx start-block) nil)
+               picasm-instruction-indent-spaces)
+              ((looking-back (picasm-rx condition-block) nil)
+               picasm-condition-block-indent-spaces)
+              (t ; use previous indent
+               (back-to-indentation)
+               (min (current-column)
+                    picasm-instruction-indent-spaces)))))))
     (when indent
       (indent-line-to indent))))
 
