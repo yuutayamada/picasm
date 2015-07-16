@@ -138,7 +138,7 @@ a semicolon."
         (insert (format "Oscillator: %s\n" (xml-get-attribute osc 'Speed)))))))
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.asm$" . picasm-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(asm\\|inc\\)\\'" . picasm-mode))
 
 (provide 'picasm)
 
