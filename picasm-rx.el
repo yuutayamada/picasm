@@ -82,9 +82,7 @@
            (or "list" "equ" "constant" "res" "MACRO" "ENDM" "ORG" "RADIX" "PAGESEL" "BANKSEL"
                (and "#" (or "include" "define" "if" "else" "endif" "ifdef" "ifndef")))))
       (section-marker
-       . ,(rx symbol-start
-              (or (and "UDATA" (? "_SHR")) "CODE" "__CONFIG" "END")
-              symbol-end))
+       . ,(rx (or (and "UDATA" (? "_SHR")) "CODE" "__CONFIG" "END")))
       (label
        . ,(rx
            (or (any "a-zA-Z_"))
