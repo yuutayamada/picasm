@@ -55,7 +55,7 @@
   "Number of spaces to indent condition instruction lines."
   :type 'integer :group 'picasm)
 
-(defcustom picasm-section-marker-indent-spaces 0
+(defcustom picasm-section-marker-indent-spaces 8
   "Number of spaces to indent section markers."
   :type 'integer :group 'picasm)
 
