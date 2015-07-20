@@ -83,7 +83,11 @@
 (defun picasm-eldoc-get (symbol)
   "Return message that show on eldoc's mini-buffer from SYMBOL."
   (let ((msg (assoc-default symbol picasm-eldoc--instructions)))
-    (when msg (format "%s%s" symbol msg))))
+    (when msg
+      (let* ((obj (format "%s%s" symbol msg))
+             (len (length (symbol-name symbol))))
+        (put-text-property 0 len 'face 'font-lock-function-name-face obj)
+        obj))))
 
 (defun picasm-eldoc-setup ()
   (when (eq major-mode 'picasm-mode)
