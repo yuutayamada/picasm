@@ -33,7 +33,7 @@
 (defconst picasm-eldoc--instructions
   '((ADDLW  . "(value) Add the Literal VALUE to the W")
     (ADDWF  . "(loc,d) Add W and F registers at LOCation F (F + W -> d)")
-    (ANDLW  . "(value) Perform AND with a Literal VALUE *&* W register")
+    (ANDLW  . "(value) Perform AND with a Literal VALUE with W register. Then store result to W.")
     (ANDWF  . "(loc,d) Perform a logical AND with W and value found at LOCation in the F register")
     (BCF    . "(F-loc,b) Bit Clear(0) an location of F's B-th bit")
     (BSF    . "(F-loc,b) Bit Set(1) an location of F's B-th bit")
