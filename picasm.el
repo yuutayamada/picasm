@@ -75,7 +75,7 @@ a semicolon."
            (picasm-strip-trailing-whitespace)
            (end-of-line)
            (cl-dotimes (_ picasm-instruction-comment-indent-tabs)
-             (insert "\t"))
+             (insert "  "))
            (insert "; "))
           ((looking-at "^[ \t]+[[:alpha:]]+[ \t]+[^ \t]+[ \t]+;.*$")
            (end-of-line))
