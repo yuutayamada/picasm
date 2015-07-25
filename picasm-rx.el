@@ -64,6 +64,7 @@
               (or "CALL" "GOTO" "RETFIE" "RETLW" "RETURN")))
       (numbers
        . ,(rx
+           (1+ blank)
            (or
             (and (or "b" "B") "'" (1+ (in "0-1")) "'")
             (and (or "o" "O") "'" (1+ (in "0-7")) "'")
@@ -76,7 +77,8 @@
             (and (1+ num) (or "d" "D"))
             (and (1+ hex) (or "h" "H"))
             (and "." (1+ num))
-            (and "0" (or "x" "X") (1+ hex)))))
+            (and "0" (or "x" "X") (1+ hex)))
+           (not (any ":"))))
       (pp-directive
        . ,(rx
            (or "list" "equ" "constant" "res" "MACRO" "ENDM" "ORG" "RADIX" "PAGESEL" "BANKSEL"
